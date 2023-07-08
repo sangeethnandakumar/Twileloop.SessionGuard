@@ -7,4 +7,10 @@ namespace Twileloop.SessionGuard.Persistance
         Task<T> ReadFileAsync(string filePath);
         Task WriteFileAsync(T state, string filePath);
     }
+
+    public interface IFSPersistance<T>
+    {
+        Task<T> ReadFileAsync(string filePath);
+        Task WriteFileAsync(T state, string filePath);
+    }
 }

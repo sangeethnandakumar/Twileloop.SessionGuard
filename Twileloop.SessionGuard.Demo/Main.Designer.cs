@@ -30,6 +30,8 @@
         {
             Write = new Button();
             Read = new Button();
+            Text = new RichTextBox();
+            Vfs = new Button();
             SuspendLayout();
             // 
             // Write
@@ -52,15 +54,35 @@
             Read.UseVisualStyleBackColor = true;
             Read.Click += Read_Click;
             // 
+            // Text
+            // 
+            Text.Font = new Font("Tahoma", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            Text.Location = new Point(224, 20);
+            Text.Name = "Text";
+            Text.Size = new Size(331, 88);
+            Text.TabIndex = 2;
+            Text.Text = "";
+            // 
+            // Vfs
+            // 
+            Vfs.Location = new Point(31, 124);
+            Vfs.Name = "Vfs";
+            Vfs.Size = new Size(524, 37);
+            Vfs.TabIndex = 3;
+            Vfs.Text = "Test VFS (Virtual File System)";
+            Vfs.UseVisualStyleBackColor = true;
+            Vfs.Click += Vfs_Click;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(592, 254);
+            ClientSize = new Size(592, 221);
+            Controls.Add(Vfs);
+            Controls.Add(Text);
             Controls.Add(Read);
             Controls.Add(Write);
             Name = "Main";
-            Text = "Form1";
             ResumeLayout(false);
         }
 
@@ -68,5 +90,7 @@
 
         private Button Write;
         private Button Read;
+        private RichTextBox Text;
+        private Button Vfs;
     }
 }
