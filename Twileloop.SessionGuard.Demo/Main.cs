@@ -13,6 +13,12 @@ namespace Twileloop.SessionGuard.Demo
         public Main(IPersistance<MyData> persistance)
         {
             InitializeComponent();
+            state.LoadState(new MyData 
+            {
+                Id = 1,
+                FullName = "Sangeeth",
+                Counter = 0
+            });
             this.persistance = persistance;
             State<MyData>.Instance.OnStateUpdated += OnStateUpdated;
         }
@@ -26,7 +32,7 @@ namespace Twileloop.SessionGuard.Demo
         {
             //Read data from file
             var amr = persistance.ReadFileAsync("sample.amr").Result;
-            
+
             //Load into state
             state.LoadState(amr.Data);
             var data = state.GetState();
@@ -39,6 +45,9 @@ namespace Twileloop.SessionGuard.Demo
         {
             Counter.Text = e.State.Counter.ToString();
             Text.Text = $"Sangeeth scored {e.State.Counter} points";
+            Tab.SelectedIndex = e.State.Counter;
+            Prev.Enabled = e.State.Counter == 0 ? false : true;
+            Next.Enabled = e.State.Counter == 4 ? false : true;
         }
 
         private void Plus_Click(object sender, EventArgs e)
@@ -49,6 +58,22 @@ namespace Twileloop.SessionGuard.Demo
         private void Minus_Click(object sender, EventArgs e)
         {
             state.SetState(x => x.Counter--);
+        }
+
+        private void Next_Click(object sender, EventArgs e)
+        {
+            if (state.GetState().Counter < 4)
+            {
+                state.SetState(x => x.Counter++);
+            }
+        }
+
+        private void Prev_Click(object sender, EventArgs e)
+        {
+            if (state.GetState().Counter > 0)
+            {
+                state.SetState(x => x.Counter--);
+            }
         }
     }
 }
