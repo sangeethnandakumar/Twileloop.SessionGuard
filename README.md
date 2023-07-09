@@ -17,6 +17,8 @@ SessionGuard has 2 primary features
 - State Management
 - Persistence Management
 
+![example](https://github.com/sangeethnandakumar/Twileloop.SessionGuard/assets/24974154/553ef507-5565-4c3d-977d-a2191b918f30)
+
 ### STATE MANAGEMENT
 You can create a model representing your application state and give it to SessionGuard.
 SessionGuard's job is to manage it. It stores it as a singleton and allows you to read and write your state from anywhere in your app.
@@ -37,8 +39,6 @@ You can simply pass your model and a file path. SessionGuard takes care of seria
 This allows you to store your sessions or state in the most optimal way.
 
 BCL XML serializers have limitations when using ICollections. But SessionGuard avoids these issues by utilizing `YAXLib1` to perform XML handling and error suppressions.
-
-![example](https://github.com/sangeethnandakumar/Twileloop.SessionGuard/assets/24974154/553ef507-5565-4c3d-977d-a2191b918f30)
 
 ## License
 > Twileloop.SessionGuard - is licensed under the MIT License. See the LICENSE file for more details.
