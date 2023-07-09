@@ -3,6 +3,6 @@
     public interface IState<T>
     {
         T GetState();
-        void SetState(T state);
+        void LoadState(T state);
     }
 }

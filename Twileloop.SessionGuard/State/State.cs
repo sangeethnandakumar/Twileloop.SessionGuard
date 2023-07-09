@@ -1,17 +1,37 @@
 ﻿using System;
+using Twileloop.SessionGuard.Models;
 
 namespace Twileloop.SessionGuard.State
 {
+
     public class State<T> : IState<T>
     {
-        public T GetState()
+        private static State<T> instance;
+        private T state;
+        public event EventHandler<StateUpdateEventArgs<T>> OnStateUpdated;
+
+        private State() { }
+
+        public static State<T> Instance
         {
-            throw new NotImplementedException();
+            get
+            {
+                if (instance == null)
+                    instance = new State<T>();
+
+                return instance;
+            }
         }
 
-        public void SetState(T state)
+        public T GetState()
         {
-            throw new NotImplementedException();
+            return state;
+        }
+
+        public void LoadState(T newState)
+        {
+            state = newState;
+            OnStateUpdated?.Invoke(this, new StateUpdateEventArgs<T>(state));
         }
     }
 }

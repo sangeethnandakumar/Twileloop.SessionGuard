@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Twileloop.SessionGuard.Persistance;
+using Twileloop.SessionGuard.State;
 
 namespace Twileloop.SessionGuard.Demo
 {
@@ -21,7 +22,7 @@ namespace Twileloop.SessionGuard.Demo
         //Dependency Injections
         static void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IPersistance<AMRFile>, Persistance<AMRFile>>();
+            services.AddSingleton<IPersistance<MyData>, Persistance<MyData>>();
             services.AddSingleton<Main>();
         }
     }

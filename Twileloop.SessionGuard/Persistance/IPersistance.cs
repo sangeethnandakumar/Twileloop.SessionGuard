@@ -1,16 +1,11 @@
 ﻿using System.Threading.Tasks;
+using Twileloop.SessionGuard.Models;
 
 namespace Twileloop.SessionGuard.Persistance
 {
     public interface IPersistance<T>
     {
-        Task<T> ReadFileAsync(string filePath);
-        Task WriteFileAsync(T state, string filePath);
-    }
-
-    public interface IFSPersistance<T>
-    {
-        Task<T> ReadFileAsync(string filePath);
+        Task<FileDetails<T>> ReadFileAsync(string filePath);
         Task WriteFileAsync(T state, string filePath);
     }
 }

@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Twileloop.SessionGuard.Exceptions;
 using Twileloop.SessionGuard.Helper;
+using Twileloop.SessionGuard.Models;
 
 namespace Twileloop.SessionGuard.Persistance
 {
 
     public class Persistance<T> : IPersistance<T>
     {
-        public async Task<T> ReadFileAsync(string filePath)
+        public async Task<FileDetails<T>> ReadFileAsync(string filePath)
         {
             try
             {
@@ -21,8 +22,9 @@ namespace Twileloop.SessionGuard.Persistance
                     await fileStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
                     var decompressedBytes = DeflateHelper.DecompressData(buffer);
                     var xml = Encoding.UTF8.GetString(decompressedBytes);
-                    var state = XmlHelper.Deserialize<T>(xml);
-                    return state;
+                    var data = XmlHelper.Deserialize<T>(xml);
+                    var fileDetails = GetFileDetails(filePath, data);
+                    return fileDetails;
                 }
             }
             catch (Exception ex)
@@ -45,6 +47,31 @@ namespace Twileloop.SessionGuard.Persistance
             catch (Exception ex)
             {
                 throw new FileAccessException(ex, filePath, false);
+            }
+        }
+
+        private FileDetails<T> GetFileDetails<T>(string fileLocation, T data)
+        {
+            try
+            {
+                var fileDetails = new FileDetails<T>();
+                FileInfo fileInfo = new FileInfo(fileLocation);
+
+                fileDetails.FileName = Path.GetFileName(fileLocation);
+                fileDetails.FileLocation = Path.GetFullPath(fileLocation);
+                fileDetails.Extension = Path.GetExtension(fileLocation);
+                fileDetails.FileSizeBytes = fileInfo.Length;
+                fileDetails.Data = data;
+                fileDetails.CreatedDate = fileInfo.CreationTime;
+                fileDetails.LastModifiedDate = fileInfo.LastWriteTime;
+
+                return fileDetails;
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions here (you can log, throw, or handle it as required)
+                Console.WriteLine("An error occurred: " + ex.Message);
+                return null; // or throw an exception if needed
             }
         }
     }

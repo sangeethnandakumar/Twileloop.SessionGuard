@@ -31,6 +31,9 @@
             Write = new Button();
             Read = new Button();
             Text = new RichTextBox();
+            Counter = new Label();
+            Minus = new Button();
+            Plus = new Button();
             SuspendLayout();
             // 
             // Write
@@ -62,16 +65,50 @@
             Text.TabIndex = 2;
             Text.Text = "";
             // 
+            // Counter
+            // 
+            Counter.AutoSize = true;
+            Counter.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
+            Counter.Location = new Point(272, 127);
+            Counter.Name = "Counter";
+            Counter.Size = new Size(25, 30);
+            Counter.TabIndex = 3;
+            Counter.Text = "0";
+            // 
+            // Minus
+            // 
+            Minus.Location = new Point(208, 170);
+            Minus.Name = "Minus";
+            Minus.Size = new Size(71, 37);
+            Minus.TabIndex = 4;
+            Minus.Text = "-";
+            Minus.UseVisualStyleBackColor = true;
+            Minus.Click += Minus_Click;
+            // 
+            // Plus
+            // 
+            Plus.Location = new Point(285, 170);
+            Plus.Name = "Plus";
+            Plus.Size = new Size(71, 37);
+            Plus.TabIndex = 5;
+            Plus.Text = "+";
+            Plus.UseVisualStyleBackColor = true;
+            Plus.Click += Plus_Click;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(592, 221);
+            Controls.Add(Plus);
+            Controls.Add(Minus);
+            Controls.Add(Counter);
             Controls.Add(Text);
             Controls.Add(Read);
             Controls.Add(Write);
             Name = "Main";
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -79,5 +116,8 @@
         private Button Write;
         private Button Read;
         private RichTextBox Text;
+        private Label Counter;
+        private Button Minus;
+        private Button Plus;
     }
 }
