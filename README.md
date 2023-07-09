@@ -24,8 +24,9 @@ You can create a model representing your application state and give it to Sessio
 SessionGuard's job is to manage it. It stores it as a singleton and allows you to read and write your state from anywhere in your app.
 This brings the concept of `SINGLE SOURCE OF TRUTH` to your app. Ensuring at all times, your app refers to a single point for knowing its current state
 
-This is followed by React.Js however it can automatically update your UI the moment you change your state.
-However, unlike React, SessionGuard cannot auto-update your WinForms UI (Or whatever UI) because of .NET data binding limitations.
+This reactive approach is the foundation for React.Js apps, however, React can automatically update your UI the moment you change your state using a VirtualDOM.
+
+But unlike React, SessionGuard cannot auto-update your WinForms UI (Or whatever UI) because of .NET data binding limitations.
 
 So instead, It gives you an application-wide callback to one or more events, you define. You can utilize this callback to update your UI to match your state.
 
