@@ -38,6 +38,8 @@ This allows you to store your sessions or state in the most optimal way.
 
 BCL XML serializers have limitations when using ICollections. But SessionGuard avoids these issues by utilizing `YAXLib1` to perform XML handling and error suppressions.
 
+![example](https://github.com/sangeethnandakumar/Twileloop.SessionGuard/assets/24974154/553ef507-5565-4c3d-977d-a2191b918f30)
+
 ## License
 > Twileloop.SessionGuard - is licensed under the MIT License. See the LICENSE file for more details.
 
