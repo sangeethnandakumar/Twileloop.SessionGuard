@@ -1,12 +1,12 @@
 ﻿<!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/sangeethnandakumar/Twileloop.UOW">
-    <img src="https://iili.io/HPIj6ss.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/sangeethnandakumar/Twileloop.SessionGuard">
+    <img src="https://iili.io/HsA31eI.png" alt="Logo" width="80" height="80">
   </a>
 
   <h1 align="center"> Twileloop.SessionGuard</h1>
-  <h4 align="center"> Single Source Of Truth | Reactive UI | Persistance Files </h4>
+  <h4 align="center"> Reactive UI | State Persistance </h4>
 </div>
 
 ## About
@@ -52,7 +52,7 @@ BCL XML serializers have limitations when using ICollections. But SessionGuard a
 
 | Driver | To Use | Install Package   
 | :---: | :---:   | :---:
-| <img src="https://iili.io/HPIj6ss.png" alt="Logo" height="30"> | SessionGuard | `dotnet add package Twileloop.SessionGuard` 
+| <img src="https://iili.io/HsA31eI.png" alt="Logo" height="30"> | SessionGuard | `dotnet add package Twileloop.SessionGuard` 
 
 ## 1. Register all databases (ASP.NET dependency injection)
 ```csharp
