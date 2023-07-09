@@ -36,7 +36,7 @@ Let's say you have your state in your custom model `MyState`. SessionGuard allow
 You can simply pass your model and a file path. SessionGuard takes care of serializing your model into XML. Then it compresses using Deflate algorithm and saves to disk.
 This allows you to store your sessions or state in the most optimal way.
 
-BLC XML serializers have limitations when using ICollections. But SessionGuard avoids these issues by utilizing `YAXLib1` to perform XML handling and error suppressions.
+BCL XML serializers have limitations when using ICollections. But SessionGuard avoids these issues by utilizing `YAXLib1` to perform XML handling and error suppressions.
 
 ## License
 > Twileloop.SessionGuard - is licensed under the MIT License. See the LICENSE file for more details.
