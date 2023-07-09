@@ -47,97 +47,94 @@ BCL XML serializers have limitations when using ICollections. But SessionGuard a
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/sangeethnanda)
 
 ## Install Package
-
-> Choose the installation that suites your need
-
-| Driver | To Use | Install Package   
-| :---: | :---:   | :---:
-| <img src="https://iili.io/HsA31eI.png" alt="Logo" height="30"> | SessionGuard | `dotnet add package Twileloop.SessionGuard` 
-
-## 1. Register all databases (ASP.NET dependency injection)
-```csharp
-//LiteDB
-builder.Services.AddUnitOfWork((uow) => {
-    uow.Connections = new List<LiteDBConnection>
-    {
-        new LiteDBConnection("DatabaseA", "Filename=DatabaseA.db; Mode=Shared; Password=****;"),
-        new LiteDBConnection("DatabaseB", "Filename=DatabaseB.db; Mode=Shared; Password=****;")
-    };
-});
-
-//MongoDB
-builder.Services.AddUnitOfWork((uow) => {
-    uow.Connections = new List<MongoDBConnection>
-    {
-        new MongoDBConnection("DatabaseA", "mongodb+srv://Uername:****@Cluster"),
-        new MongoDBConnection("DatabaseB", "mongodb+srv://Uername:****@Cluster")
-    };
-});
+```powershell
+dotnet add package Twileloop.SessionGuard
 ```
 
-## 2. For Non Dependency Injection Setup (Like Console apps)
+### STATE MANAGEMENT
+
+## 1. Complete Setup
+Here `MyData` is your custom model representing your application's state
+
 ```csharp
-//LiteDB
-var context = LiteDB.Support.Extensions.BuildDbContext(option =>
+public partial class Main : Form
+{
+    //Step 1: Define Your State
+    private readonly State<MyData> state = State<MyData>.Instance;
+
+    public Main(IPersistance<MyData> persistance)
     {
-        option.Connections = new List<LiteDBConnection>
+        //Step 2: Load a default state, when the first constructor invokes. This is the first entry of data into your state.
+        //You need to do this only one time in your app, preferably in an entry class
+        state.LoadState(new MyData 
         {
-            new LiteDBConnection("DatabaseA", "Filename=DatabaseA.db; Mode=Shared; Password=****;"),
-            new LiteDBConnection("DatabaseB", "Filename=DatabaseB.db; Mode=Shared; Password=****;")
-        };
-    });
-var uow = new LiteDB.Core.UnitOfWork(context);
+            Id = 1,
+            FullName = "Sangeeth Nandakumar",
+            Counter = 0
+        });
 
-//MongoDB
-var context = MongoDB.Support.Extensions.BuildDbContext(option =>
-    {
-        option.Connections = new List<MongoDBConnection>
-        {
-            new MongoDBConnection("DatabaseA", "mongodb+srv://Username:****@Cluster"),
-            new MongoDBConnection("DatabaseB", "mongodb+srv://Username:****@Cluster")
-        };
-    });
-var uow = new MongoDB.Core.UnitOfWork(context);
-```
-
-## 3. Inject and Use as required
-```csharp
-    [ApiController]
-    public class HomeController : ControllerBase 
-    {
-        private readonly UnitOfWork uow;
-
-        public HomeController(UnitOfWork uow)
-        {
-            this.uow = uow;
-        }
-
-        [HttpGet]
-        public IActionResult Get() 
-        {            
-            try
-            {
-                // Step 1: Point to a database
-                uow.UseDatabase("<DB_NAME>");
-
-                //Step 2: Get a repository for your model 'Dogs'
-                var dogRepo = uow.GetRepository<Dogs>();
-
-                //Step 3: Do some fetch
-                allDogs = dogRepo.GetAll().ToList();
-
-                //Step 4: Or any CRUD operations you like
-                uow.BeginTransaction();
-                dogRepo.Add(new Dog());
-                uow.Commit();
-
-                return Ok(allDogs);
-            }
-            catch(Exception)
-            {
-                uow.Rollback();
-            }            
-        }
-
+        //Step 4: Register one or more events on the constructor
+        State<MyData>.Instance.OnStateUpdated += OnStateUpdated;
     }
+
+    //Step 3: Define a custom event that will trigger every time the state changes
+    //Here make sure UI corresponds to your custom state
+    //You'll get an updated state instance in event args 'e'
+    private void OnStateUpdated(object sender, StateUpdateEventArgs<MyData> e)
+    {
+        //Update UI according to your state
+        Counter.Text = e.State.Counter.ToString();
+        Text.Text = $"Sangeeth scored {e.State.Counter} points";
+        Tab.SelectedIndex = e.State.Counter;
+        Prev.Enabled = e.State.Counter == 0 ? false : true;
+        Next.Enabled = e.State.Counter == 4 ? false : true;
+    }
+
+    //Step 5: Now simply update the state as you go
+    //This triggers all registered events you made on your constructor after updating the state
+    private void Plus_Click(object sender, EventArgs e)
+    {
+        state.SetState(x => x.Counter++);
+    }
+    
+    private void Minus_Click(object sender, EventArgs e)
+    {
+        state.SetState(x => x.Counter--);
+    }
+
+}
+});
+```
+
+### PERSISTANCE MANAGEMENT
+
+## 2. Complete Setup
+Let's say `MyData` is your custom model you want to write and read from file.
+`MyData` could be your state like above or it can be anything you want to store in a file.
+
+```charp
+public partial class Main : Form
+{
+    //Step 1: Inject IPersistance with your model 'MyData'
+    private readonly IPersistance<MyData> persistance;
+    public Main(IPersistance<MyData> persistance)
+    {
+        this.persistance = persistance;
+    }
+
+    //Step 2: Write your model by simply calling `WriteFileAsync`
+    //This will serialize your MyData into XML then compresses it using 'Deflate' algorithm before storing it as a binary file
+    //Here we used '*.dat' as an extension, You can use any you prefer
+    private void Write_Click(object sender, EventArgs e)
+    {
+        persistance.WriteFileAsync(new MyData {}, "mydata.dat").Wait();
+    }
+
+    //Step 3: Read back your model from your '*.dat' file
+    //This will decompress the file using 'Deflate' algorithm and then deserializes XML back to your 'MyData' class
+    private void Read_Click(object sender, EventArgs e)
+    {
+        var myData = persistance.ReadFileAsync("mydata.dat").Result;
+    }
+}
 ```
