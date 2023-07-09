@@ -112,7 +112,7 @@ public partial class Main : Form
 Let's say `MyData` is your custom model you want to write and read from file.
 `MyData` could be your state like above or it can be anything you want to store in a file.
 
-```charp
+```csharp
 public partial class Main : Form
 {
     //Step 1: Inject IPersistance with your model 'MyData'
