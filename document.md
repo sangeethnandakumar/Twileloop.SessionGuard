@@ -67,6 +67,9 @@ public partial class Main : Form
 
     public Main(IPersistance<MyData> persistance)
     {
+        //Step 4: Register one or more events on the constructor
+        State<MyData>.Instance.OnStateUpdated += OnStateUpdated;
+
         //Step 2: Load a default state, when the first constructor invokes. This is the first entry of data into your state.
         //You need to do this only one time in your app, preferably in an entry class
         state.LoadState(new MyData 
@@ -75,9 +78,6 @@ public partial class Main : Form
             FullName = "Sangeeth Nandakumar",
             Counter = 0
         });
-
-        //Step 4: Register one or more events on the constructor
-        State<MyData>.Instance.OnStateUpdated += OnStateUpdated;
     }
 
     //Step 3: Define a custom event that will trigger every time the state changes
