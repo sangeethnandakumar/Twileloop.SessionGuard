@@ -110,6 +110,15 @@ public partial class Main : Form
 }
 ```
 
+## Limitations
+
+> **Warning**
+> These are known limitations
+
+Although quick, A WinForms UI can't update as fast as state changes. Doing very fast state updates can flicker rendering or block the UI thread bringing a very bad user experience.
+This is a limitation on WinForms. Using `Twileloop.SessionGuard` invokes the UI refresh codebase the moment you call `state.SetState(x=>...)` triggering a re-rendering.
+It works fine in all normal cases. However, if you try to call `state.SetState(x=>...)` on fast actions like Textbox text changes as the user presses key by key. The WinForm may not be able to keep up with the rendering speed. Directly update the state in those scenarios using `state.GetState().MyState.Text = TextBox.Text;`. This allows the state to update but won't refresh the UI.
+
 ### PERSISTENCE MANAGEMENT
 
 ## 2. Complete Setup
