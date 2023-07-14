@@ -8,24 +8,40 @@ namespace Twileloop.SessionGuard.Demo
     {
         private readonly IPersistance<MyData> persistance;
 
-        private readonly State<MyData> state = State<MyData>.Instance;
+        //Step 1: Initialize session
+        private readonly Session<MyData> session = Session<MyData>.Instance;
 
         public Main(IPersistance<MyData> persistance)
         {
             InitializeComponent();
-            state.LoadState(new MyData 
+
+            //Step 2: Register a UI renderer event when state changes
+            session.OnStateUpdated += OnStateUpdated;
+            //Step 3: Load initial state
+            session.LoadState(new MyData
             {
                 Id = 1,
                 FullName = "Sangeeth",
                 Counter = 0
             });
+
             this.persistance = persistance;
-            State<MyData>.Instance.OnStateUpdated += OnStateUpdated;
+        }
+
+        //Step 4: Write the UI render event
+        private void OnStateUpdated(object sender, StateUpdateEventArgs<MyData> e)
+        {
+            //Bind UI components for autoupdate
+            e.Session.Bind(nameof(e.State.Counter), () => Counter.Text = e.State.Counter.ToString());
+            e.Session.Bind(nameof(e.State.Counter), () => Text.Text = $"Sangeeth scored {e.State.Counter} points");
+            e.Session.Bind(nameof(e.State.Counter), () => Tab.SelectedIndex = e.State.Counter);
+            e.Session.Bind(nameof(e.State.Counter), () => Prev.Enabled = e.State.Counter == 0 ? false : true);
+            e.Session.Bind(nameof(e.State.Counter), () => Next.Enabled = e.State.Counter == 0 ? false : true);
         }
 
         private void Write_Click(object sender, EventArgs e)
         {
-            persistance.WriteFileAsync(state.GetState(), "sample.amr").Wait();
+            persistance.WriteFileAsync(session.State, "sample.amr").Wait();
         }
 
         private void Read_Click(object sender, EventArgs e)
@@ -34,45 +50,35 @@ namespace Twileloop.SessionGuard.Demo
             var amr = persistance.ReadFileAsync("sample.amr").Result;
 
             //Load into state
-            state.LoadState(amr.Data);
-            var data = state.GetState();
+            session.LoadState(amr.Data);
+            var data = session.State;
 
             Text.Text = $"Sangeeth scored {data.Counter} points";
         }
 
-        //Event Handler
-        private void OnStateUpdated(object sender, StateUpdateEventArgs<MyData> e)
-        {
-            Counter.Text = e.State.Counter.ToString();
-            Text.Text = $"Sangeeth scored {e.State.Counter} points";
-            Tab.SelectedIndex = e.State.Counter;
-            Prev.Enabled = e.State.Counter == 0 ? false : true;
-            Next.Enabled = e.State.Counter == 4 ? false : true;
-        }
-
         private void Plus_Click(object sender, EventArgs e)
         {
-            state.SetState(x => x.Counter++);
+            session.SetState(x => x.Counter++);
         }
 
         private void Minus_Click(object sender, EventArgs e)
         {
-            state.SetState(x => x.Counter--);
+            session.SetState(x => x.Counter--);
         }
 
         private void Next_Click(object sender, EventArgs e)
         {
-            if (state.GetState().Counter < 4)
+            if (session.State.Counter < 4)
             {
-                state.SetState(x => x.Counter++);
+                session.SetState(x => x.Counter++);
             }
         }
 
         private void Prev_Click(object sender, EventArgs e)
         {
-            if (state.GetState().Counter > 0)
+            if (session.State.Counter > 0)
             {
-                state.SetState(x => x.Counter--);
+                session.SetState(x => x.Counter--);
             }
         }
     }

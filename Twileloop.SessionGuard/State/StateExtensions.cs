@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Text.Json;
 
 namespace Twileloop.SessionGuard.State
 {
     public static class StateExtensions
     {
-        public static void SetState<T>(this IState<T> state, Action<T> updateAction)
+        public static void SetState<T>(this Session<T> state, Action<T> updateAction)
         {
-            T currentState = state.GetState();
-            updateAction(currentState);
-            state.LoadState(currentState);
+            var previousState = JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(state.State));
+            updateAction(state.State);
+            var diffs = DiffChecker<T>.GetChangedProperties(previousState, state.State);
+            state.LoadState(state.State, diffs);
         }
     }
 }
