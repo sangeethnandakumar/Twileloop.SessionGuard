@@ -19,7 +19,7 @@ SessionGuard has 2 primary features
 
 ### DEMO
 
-<img src="https://iili.io/HsAuvFS.gif" alt="Logo" width="540" height="584">
+<img src="https://iili.io/HsAuvFS.gif" alt="Working of Twileloop.SessionGurd NuGet package">
 
 ### STATE MANAGEMENT
 You can create a model representing your application state and give it to SessionGuard.
@@ -67,6 +67,9 @@ public partial class Main : Form
 
     public Main(IPersistance<MyData> persistance)
     {
+        //Step 4: Register one or more events on the constructor
+        State<MyData>.Instance.OnStateUpdated += OnStateUpdated;
+
         //Step 2: Load a default state, when the first constructor invokes. This is the first entry of data into your state.
         //You need to do this only one time in your app, preferably in an entry class
         state.LoadState(new MyData 
@@ -75,9 +78,6 @@ public partial class Main : Form
             FullName = "Sangeeth Nandakumar",
             Counter = 0
         });
-
-        //Step 4: Register one or more events on the constructor
-        State<MyData>.Instance.OnStateUpdated += OnStateUpdated;
     }
 
     //Step 3: Define a custom event that will trigger every time the state changes
@@ -86,33 +86,43 @@ public partial class Main : Form
     private void OnStateUpdated(object sender, StateUpdateEventArgs<MyData> e)
     {
         //Update UI according to your state
-        Counter.Text = e.State.Counter.ToString();
-        Text.Text = $"Sangeeth scored {e.State.Counter} points";
-        Tab.SelectedIndex = e.State.Counter;
-        Prev.Enabled = e.State.Counter == 0 ? false : true;
-        Next.Enabled = e.State.Counter == 4 ? false : true;
+        //To prevent CrossThread UI update, It's better to wrap your UI update logic inside any of your UI component's invoke delegate
+        //This makes sure UI updation works only from UI thread
+        //Also allows us to call the state.SetState(x=>...); without concerning which thread we're currently in (Like Task.Run or Thread.StartNew or Parallel.Invoke etc...)
+        MainForm.Invoke(()=>
+        {
+            Counter.Text = e.State.Counter.ToString();
+            Text.Text = $"Sangeeth scored {e.State.Counter} points";
+            Tab.SelectedIndex = e.State.Counter;
+            Prev.Enabled = e.State.Counter == 0 ? false : true;
+            Next.Enabled = e.State.Counter == 4 ? false : true;
+        });
     }
 
     //Step 5: Now simply update the state as you go
     //This triggers all registered events you made on your constructor after updating the state
     private void Plus_Click(object sender, EventArgs e)
     {
+        //Do some tasks...
         state.SetState(x => x.Counter++);
-    }
-    
-    private void Minus_Click(object sender, EventArgs e)
-    {
-        state.SetState(x => x.Counter--);
     }
 
 }
-});
 ```
 
-### PERSISTANCE MANAGEMENT
+## Limitations
+
+> **Warning**
+> These are known limitations
+
+Although quick, A WinForms UI can't update as fast as state changes. Doing very fast state updates can flicker rendering or block the UI thread bringing a very bad user experience.
+This is a limitation on WinForms. Using `Twileloop.SessionGuard` invokes the UI refresh codebase the moment you call `state.SetState(x=>...)` triggering a re-rendering.
+It works fine in all normal cases. However, if you try to call `state.SetState(x=>...)` on fast actions like Textbox text changes as the user presses key by key. The WinForm may not be able to keep up with the rendering speed. Directly update the state in those scenarios using `state.GetState().MyState.Text = TextBox.Text;`. This allows the state to update but won't refresh the UI.
+
+### PERSISTENCE MANAGEMENT
 
 ## 2. Complete Setup
-Let's say `MyData` is your custom model you want to write and read from file.
+Let's say `MyData` is the custom model you want to write and read from the file.
 `MyData` could be your state like above or it can be anything you want to store in a file.
 
 ```csharp
