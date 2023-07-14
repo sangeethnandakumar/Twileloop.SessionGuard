@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Twileloop.SessionGuard.Models;
 
 namespace Twileloop.SessionGuard.State
@@ -35,6 +36,14 @@ namespace Twileloop.SessionGuard.State
         public void Bind(string field, Action onFieldUpdate)
         {
             if (FieldsUpdated.Contains(field))
+            {
+                onFieldUpdate();
+            }
+        }
+
+        public void Bind(string[] field, Action onFieldUpdate)
+        {
+            if (FieldsUpdated.Intersect(field).Any())
             {
                 onFieldUpdate();
             }

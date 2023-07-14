@@ -26,14 +26,11 @@ You can create a model representing your application state and give it to Sessio
 SessionGuard's job is to manage it. It stores it as a singleton and allows you to read and write your state from anywhere in your app.
 This brings the concept of `SINGLE SOURCE OF TRUTH` to your app. Ensuring at all times, your app refers to a single point for knowing its current state
 
-This reactive approach is the foundation for React.Js apps, however, React can automatically update your UI the moment you change your state using a VirtualDOM.
+This reactive approach is the foundation for React.Js apps.
+`Twileloop.SessionGuard` also tries to implement a reactive UI framework approach using a singleton application wide `State`.
 
-But unlike React, SessionGuard cannot auto-update your WinForms UI (Or whatever UI) because of .NET data binding limitations.
-
-So instead, It gives you an application-wide callback to one or more events, you define. You can utilize this callback to update your UI to match your state.
-
-Like React, SessionGuard has `GetState()` and `SetState()` hooks. Every time you call `SetState(x => ...)` from anywhere in your app, SessionGuard updates the state and gives you a trigger callback to your events.
-You can immediately update the UI to match the changed state ensuring UI and state are in sync.
+Like React, SessionGuard has a `SetState()` hook which will tell it you need to update something in your state.
+Every time you call `SetState(x => ...)`, SessionGuard checks for differences from previous state and update only the required UI components.
 
 ### PERSISTENCE MANAGEMENT
 Let's say you have your state in your custom model `MyState`. SessionGuard allows you to write your state into a file (with an extension you prefer) into the disk.
@@ -56,57 +53,112 @@ dotnet add package Twileloop.SessionGuard
 
 ### STATE MANAGEMENT
 
-## 1. Complete Setup
-Here `MyData` is your custom model representing your application's state
+## Quick Overview Of Working
+Here's how `Twileloop.SessionGuard` works in a nutshell
+
+1. You define a model state for your app
+1. Your UI should map to this state model. For that you use `session.Bind()` like below
+1. There you tell, This should happen in UI when this state model's property updated
+1. That's it
+1. Now whenever you need to update your state, Just call `session.SetState(x=>...)` like below
+1. Now `Twileloop.SessionGuard` understood you want to update your state
+1. It does a comparison with previous state and new state
+1. If it finds 2 fields in your state is updated, It invokes the bindings associated with those state fields
+1. Thus your UI updates in sync with your state
+1. You update state, UI auto updates
+1. Now play with state only. Your app is already responsive ..!
+
+## Step 0
+Define a model that represent's your app's state. Let's say your state model is `MyData`
+```csharp
+public class MyData
+{
+    public int? Id { get; set; }
+    public string? FullName { get; set; }
+    public List<string>? List { get; set; }
+    public int Counter { get; set; } = 0;
+}
+```
+
+### Step 1
+A session controls your state.
+Define a readonly private variable to declare a session
 
 ```csharp
-public partial class Main : Form
+//Step 1: Initialize session
+private readonly Session<MyData> session = Session<MyData>.Instance;
+```
+
+### Step 2
+Since your app is going to be fully driven by state, You need an initial state when the app launches for first time. It can be some default values in your state model.
+Also, We need to tell `Twileloop.SessionGuard` which event to update, When it detects a state update. This event can be called `UI Renderer Event` since that is where we write logic to update our UI
+
+REnough. Let's register our UI renderer event & load initial state
+
+```csharp
+public Main()
 {
-    //Step 1: Define Your State
-    private readonly State<MyData> state = State<MyData>.Instance;
+    InitializeComponent();
 
-    public Main(IPersistance<MyData> persistance)
+    //Step 2: Register a UI renderer event when state changes
+    session.OnStateUpdated += OnStateUpdated;
+    
+    //Step 3: Load initial state
+    session.LoadState(new MyData
     {
-        //Step 4: Register one or more events on the constructor
-        State<MyData>.Instance.OnStateUpdated += OnStateUpdated;
+        Id = 1,
+        FullName = "Sangeeth",
+        Counter = 0
+    });
+}
+```
 
-        //Step 2: Load a default state, when the first constructor invokes. This is the first entry of data into your state.
-        //You need to do this only one time in your app, preferably in an entry class
-        state.LoadState(new MyData 
-        {
-            Id = 1,
-            FullName = "Sangeeth Nandakumar",
-            Counter = 0
-        });
-    }
+### Step 3
+Write your UI renderer event and bind fields.
+Bind will register to `Twileloop.SessionGuard`, When this property changes on state, Do this (Which will be your desired UI update)
 
-    //Step 3: Define a custom event that will trigger every time the state changes
-    //Here make sure UI corresponds to your custom state
-    //You'll get an updated state instance in event args 'e'
-    private void OnStateUpdated(object sender, StateUpdateEventArgs<MyData> e)
-    {
-        //Update UI according to your state
-        //To prevent CrossThread UI update, It's better to wrap your UI update logic inside any of your UI component's invoke delegate
-        //This makes sure UI updation works only from UI thread
-        //Also allows us to call the state.SetState(x=>...); without concerning which thread we're currently in (Like Task.Run or Thread.StartNew or Parallel.Invoke etc...)
-        MainForm.Invoke(()=>
-        {
-            Counter.Text = e.State.Counter.ToString();
-            Text.Text = $"Sangeeth scored {e.State.Counter} points";
-            Tab.SelectedIndex = e.State.Counter;
-            Prev.Enabled = e.State.Counter == 0 ? false : true;
-            Next.Enabled = e.State.Counter == 4 ? false : true;
-        });
-    }
+If you need to do a UI update on any subset of properties changed, Simply pass it as array
 
-    //Step 5: Now simply update the state as you go
-    //This triggers all registered events you made on your constructor after updating the state
-    private void Plus_Click(object sender, EventArgs e)
-    {
-        //Do some tasks...
-        state.SetState(x => x.Counter++);
-    }
+```csharp
+//Step 4: Write the UI render event
+private void OnStateUpdated(object sender, StateUpdateEventArgs<MyData> e)
+{
+    //Bind UI components for autoupdate
+    e.Session.Bind(nameof(e.State.Counter), () => Counter.Text = e.State.Counter.ToString());
+    e.Session.Bind(nameof(e.State.Counter), () => Tab.SelectedIndex = e.State.Counter);
+    e.Session.Bind(nameof(e.State.Counter), () => Prev.Enabled = e.State.Counter == 0 ? false : true);
+    e.Session.Bind(nameof(e.State.Counter), () => Next.Enabled = e.State.Counter == 0 ? false : true);
 
+    //When you want to update Text field whenever any of these state values change
+    e.Session.Bind(new string[] {
+            nameof(e.State.Id),
+            nameof(e.State.Counter),
+            nameof(e.State.FullName)
+        },
+        () => Text.Text = $"Sangeeth scored {e.State.Counter} points"
+    );
+}
+```
+
+### Step 4
+UI Renderer Event done. Let's goto last step
+
+Now how you can we update state of our app and notify `Twileloop.SessionGuard`.
+It's simple.
+
+Whenever you need to change your state. Simply call `session.SetState(x=>...)`
+
+```csharp
+//Just call session.SetState(x => ...)
+private void Plus_Click(object sender, EventArgs e)
+{
+    session.SetState(x => x.Counter++);
+}
+
+//And tell what to update
+private void Minus_Click(object sender, EventArgs e)
+{
+    session.SetState(x => x.Counter = x.Counter - 1);
 }
 ```
 

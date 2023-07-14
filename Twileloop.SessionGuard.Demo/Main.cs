@@ -33,10 +33,18 @@ namespace Twileloop.SessionGuard.Demo
         {
             //Bind UI components for autoupdate
             e.Session.Bind(nameof(e.State.Counter), () => Counter.Text = e.State.Counter.ToString());
-            e.Session.Bind(nameof(e.State.Counter), () => Text.Text = $"Sangeeth scored {e.State.Counter} points");
             e.Session.Bind(nameof(e.State.Counter), () => Tab.SelectedIndex = e.State.Counter);
             e.Session.Bind(nameof(e.State.Counter), () => Prev.Enabled = e.State.Counter == 0 ? false : true);
             e.Session.Bind(nameof(e.State.Counter), () => Next.Enabled = e.State.Counter == 0 ? false : true);
+
+            //When you want to update Text field whenever any of these state values change
+            e.Session.Bind(new string[] {
+                    nameof(e.State.Id),
+                    nameof(e.State.Counter),
+                    nameof(e.State.FullName)
+                },
+                () => Text.Text = $"Sangeeth scored {e.State.Counter} points"
+            );
         }
 
         private void Write_Click(object sender, EventArgs e)
