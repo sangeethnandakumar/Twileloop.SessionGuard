@@ -101,6 +101,13 @@ public partial class Main : Form
         state.SetState(x => x.Counter++);
     }
 
+}
+```
+
+## Updating UI from a Different Thread / Background Thread
+
+Call `state.SetState(x=>...)` like this, When you update UI from a cross thread like `Task.Run(()=>...)` or `Parallel.Invoke(()=>...)` or `Thread.Start()` etc...
+```csharp
     //Specific use-case when updating from a background thread
     private void Minus_Click(object sender, EventArgs e)
     {
@@ -119,15 +126,12 @@ public partial class Main : Form
             });
         }
     }
-
-}
-});
 ```
 
-### PERSISTANCE MANAGEMENT
+### PERSISTENCE MANAGEMENT
 
 ## 2. Complete Setup
-Let's say `MyData` is your custom model you want to write and read from file.
+Let's say `MyData` is the custom model you want to write and read from the file.
 `MyData` could be your state like above or it can be anything you want to store in a file.
 
 ```csharp
