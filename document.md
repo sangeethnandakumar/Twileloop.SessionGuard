@@ -86,11 +86,17 @@ public partial class Main : Form
     private void OnStateUpdated(object sender, StateUpdateEventArgs<MyData> e)
     {
         //Update UI according to your state
-        Counter.Text = e.State.Counter.ToString();
-        Text.Text = $"Sangeeth scored {e.State.Counter} points";
-        Tab.SelectedIndex = e.State.Counter;
-        Prev.Enabled = e.State.Counter == 0 ? false : true;
-        Next.Enabled = e.State.Counter == 4 ? false : true;
+        //To prevent CrossThread UI update, It's better to wrap your UI update logic inside any of your UI component's invoke delegate
+        //This makes sure UI updation works only from UI thread
+        //Also allows us to call the state.SetState(x=>...); without concerning which thread we're currently in (Like Task.Run or Thread.StartNew or Parallel.Invoke etc...)
+        MainForm.Invoke(()=>
+        {
+            Counter.Text = e.State.Counter.ToString();
+            Text.Text = $"Sangeeth scored {e.State.Counter} points";
+            Tab.SelectedIndex = e.State.Counter;
+            Prev.Enabled = e.State.Counter == 0 ? false : true;
+            Next.Enabled = e.State.Counter == 4 ? false : true;
+        });
     }
 
     //Step 5: Now simply update the state as you go
@@ -102,30 +108,6 @@ public partial class Main : Form
     }
 
 }
-```
-
-## Updating UI from a Different Thread / Background Thread
-
-Call `state.SetState(x=>...)` like this, When you update UI from a cross thread like `Task.Run(()=>...)` or `Parallel.Invoke(()=>...)` or `Thread.Start()` etc...
-```csharp
-    //Specific use-case when updating from a background thread
-    private void Minus_Click(object sender, EventArgs e)
-    {
-        //Let's say you're doing a background task in a different thread
-        Task.Run(()=>
-        {
-            //Do background tasks here...
-        
-            //At some point you need to update UI by calling SetState(x=>...). But this is not our UI/Main thread
-            //Since UI components can only be updated from UI/Main thread, Call SetState(x=>...) only from the main thread by making use of a delegate from any WinForm UI component instance
-
-            //So, Call like this
-            MainForm.Invoke(()=>
-            {
-                state.SetState(x => x.Counter--);
-            });
-        }
-    }
 ```
 
 ### PERSISTENCE MANAGEMENT
