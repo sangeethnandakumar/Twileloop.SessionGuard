@@ -66,7 +66,7 @@ Here's how `Twileloop.SessionGuard` works in a nutshell
 1. If it finds 2 fields in your state are updated, It invokes the bindings associated with those state fields
 1. Thus your UI updates in sync with your state
 1. You update the state, UI auto-updates
-1. Now play with the state only. Your app is already responsive ..!
+1. Now play with the state only. Your app is already reactive ..!
 
 ## Step 0
 Define a model that represents your app's state. Let's say your state model is `MyData`
