@@ -19,7 +19,7 @@ SessionGuard has 2 primary features
 
 ### DEMO
 
-<img src="https://iili.io/HsAuvFS.gif" alt="Logo" width="540" height="584">
+<img src="https://iili.io/HsAuvFS.gif" alt="Working of Twileloop.SessionGurd NuGet package">
 
 ### STATE MANAGEMENT
 You can create a model representing your application state and give it to SessionGuard.
@@ -97,12 +97,27 @@ public partial class Main : Form
     //This triggers all registered events you made on your constructor after updating the state
     private void Plus_Click(object sender, EventArgs e)
     {
+        //Do some tasks...
         state.SetState(x => x.Counter++);
     }
-    
+
+    //Specific use-case when updating from a background thread
     private void Minus_Click(object sender, EventArgs e)
     {
-        state.SetState(x => x.Counter--);
+        //Let's say you're doing a background task in a different thread
+        Task.Run(()=>
+        {
+            //Do background tasks here...
+        
+            //At some point you need to update UI by calling SetState(x=>...). But this is not our UI/Main thread
+            //Since UI components can only be updated from UI/Main thread, Call SetState(x=>...) only from the main thread by making use of a delegate from any WinForm UI component instance
+
+            //So, Call like this
+            MainForm.Invoke(()=>
+            {
+                state.SetState(x => x.Counter--);
+            });
+        }
     }
 
 }
