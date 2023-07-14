@@ -27,10 +27,10 @@ SessionGuard's job is to manage it. It stores it as a singleton and allows you t
 This brings the concept of `SINGLE SOURCE OF TRUTH` to your app. Ensuring at all times, your app refers to a single point for knowing its current state
 
 This reactive approach is the foundation for React.Js apps.
-`Twileloop.SessionGuard` also tries to implement a reactive UI framework approach using a singleton application wide `State`.
+`Twileloop.SessionGuard` also tries to implement a reactive UI framework approach using a singleton application-wide `State`.
 
-Like React, SessionGuard has a `SetState()` hook which will tell it you need to update something in your state.
-Every time you call `SetState(x => ...)`, SessionGuard checks for differences from previous state and update only the required UI components.
+Like React, SessionGuard has a `SetState()` hook.
+Every time you call `SetState(x => ...)`, SessionGuard checks for differences from the previous state and updates only the required UI components.
 
 ### PERSISTENCE MANAGEMENT
 Let's say you have your state in your custom model `MyState`. SessionGuard allows you to write your state into a file (with an extension you prefer) into the disk.
@@ -57,19 +57,19 @@ dotnet add package Twileloop.SessionGuard
 Here's how `Twileloop.SessionGuard` works in a nutshell
 
 1. You define a model state for your app
-1. Your UI should map to this state model. For that you use `session.Bind()` like below
+1. Your UI should map to this state model. For that, you use `session.Bind()` like below
 1. There you tell, This should happen in UI when this state model's property updated
 1. That's it
 1. Now whenever you need to update your state, Just call `session.SetState(x=>...)` like below
 1. Now `Twileloop.SessionGuard` understood you want to update your state
-1. It does a comparison with previous state and new state
-1. If it finds 2 fields in your state is updated, It invokes the bindings associated with those state fields
+1. It does a comparison between the previous state and the new state
+1. If it finds 2 fields in your state are updated, It invokes the bindings associated with those state fields
 1. Thus your UI updates in sync with your state
-1. You update state, UI auto updates
-1. Now play with state only. Your app is already responsive ..!
+1. You update the state, UI auto-updates
+1. Now play with the state only. Your app is already responsive ..!
 
 ## Step 0
-Define a model that represent's your app's state. Let's say your state model is `MyData`
+Define a model that represents your app's state. Let's say your state model is `MyData`
 ```csharp
 public class MyData
 {
@@ -82,7 +82,7 @@ public class MyData
 
 ### Step 1
 A session controls your state.
-Define a readonly private variable to declare a session
+Define a read-only private variable to declare a session
 
 ```csharp
 //Step 1: Initialize session
@@ -90,10 +90,10 @@ private readonly Session<MyData> session = Session<MyData>.Instance;
 ```
 
 ### Step 2
-Since your app is going to be fully driven by state, You need an initial state when the app launches for first time. It can be some default values in your state model.
+Since your app is going to be fully driven by state, You need an initial state when the app launches for the first time. It can be some default values in your state model.
 Also, We need to tell `Twileloop.SessionGuard` which event to update, When it detects a state update. This event can be called `UI Renderer Event` since that is where we write logic to update our UI
 
-REnough. Let's register our UI renderer event & load initial state
+REnough. Let's register our UI renderer event & load the initial state
 
 ```csharp
 public Main()
@@ -117,13 +117,13 @@ public Main()
 Write your UI renderer event and bind fields.
 Bind will register to `Twileloop.SessionGuard`, When this property changes on state, Do this (Which will be your desired UI update)
 
-If you need to do a UI update on any subset of properties changed, Simply pass it as array
+If you need to do a UI update on any subset of properties changed, Simply pass it as an array
 
 ```csharp
 //Step 4: Write the UI render event
 private void OnStateUpdated(object sender, StateUpdateEventArgs<MyData> e)
 {
-    //Bind UI components for autoupdate
+    //Bind UI components for auto-update
     e.Session.Bind(nameof(e.State.Counter), () => Counter.Text = e.State.Counter.ToString());
     e.Session.Bind(nameof(e.State.Counter), () => Tab.SelectedIndex = e.State.Counter);
     e.Session.Bind(nameof(e.State.Counter), () => Prev.Enabled = e.State.Counter == 0 ? false : true);
@@ -141,9 +141,9 @@ private void OnStateUpdated(object sender, StateUpdateEventArgs<MyData> e)
 ```
 
 ### Step 4
-UI Renderer Event done. Let's goto last step
+UI Renderer Event done. Let's go to last step
 
-Now how you can we update state of our app and notify `Twileloop.SessionGuard`.
+Now how can we update the state of our app and notify `Twileloop.SessionGuard`?
 It's simple.
 
 Whenever you need to change your state. Simply call `session.SetState(x=>...)`
@@ -188,7 +188,7 @@ public partial class Main : Form
     }
 
     //Step 2: Write your model by simply calling `WriteFileAsync`
-    //This will serialize your MyData into XML then compresses it using 'Deflate' algorithm before storing it as a binary file
+    //This will serialize your MyData into XML then compresses it using the 'Deflate' algorithm before storing it as a binary file
     //Here we used '*.dat' as an extension, You can use any you prefer
     private void Write_Click(object sender, EventArgs e)
     {
@@ -196,7 +196,7 @@ public partial class Main : Form
     }
 
     //Step 3: Read back your model from your '*.dat' file
-    //This will decompress the file using 'Deflate' algorithm and then deserializes XML back to your 'MyData' class
+    //This will decompress the file using the 'Deflate' algorithm and then deserializes XML back to your 'MyData' class
     private void Read_Click(object sender, EventArgs e)
     {
         var myData = persistance.ReadFileAsync("mydata.dat").Result;
