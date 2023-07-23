@@ -1,5 +1,8 @@
-﻿using System;
+﻿using ObjectsComparator.Comparator.RepresentationDistinction;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Twileloop.SessionGuard.Models;
 
@@ -8,12 +11,14 @@ namespace Twileloop.SessionGuard.State
 
     public class Session<T>
     {
-        private static Session<T> instance;
         public T State { get; set; }
-        public List<string> FieldsUpdated { get; set; }
-        public event EventHandler<StateUpdateEventArgs<T>> OnStateUpdated;
+        private static Session<T> instance;
+        public List<Component> Components { get; set; } = new List<Component>();
+        public ArrayList AppStates { get; set; } = new ArrayList();
 
-        private Session() { }
+        private Session()
+        {
+        }
 
         public static Session<T> Instance
         {
@@ -26,27 +31,72 @@ namespace Twileloop.SessionGuard.State
             }
         }
 
-        public void LoadState(T newState, List<string> fieldsUpdated = null)
+        public AtomicState<U> UseState<U>(object component, string name, U value, Action renderer)
         {
-            State = newState;
-            FieldsUpdated = fieldsUpdated is null ? new List<string>() : fieldsUpdated;
-            OnStateUpdated?.Invoke(this, new StateUpdateEventArgs<T>(State, FieldsUpdated, this));
-        }
-
-        public void Bind(string field, Action onFieldUpdate)
-        {
-            if (FieldsUpdated.Contains(field))
+            var componentId = component.ToString().Split(",")[0];
+            var matchedComponent = Components.FirstOrDefault(x => x.ComponentId == componentId);
+            if (matchedComponent == null)
             {
-                onFieldUpdate();
+                var activeComponent = new Component
+                {
+                    ComponentId = componentId
+                };
+                var state = new AtomicState<U>
+                {
+                    ComponentId = componentId,
+                    UniqueIdentifier = name,
+                    Value = value
+                };
+                activeComponent.Renderer = renderer;
+                activeComponent.DependentStates.Add(state);
+                Components.Add(activeComponent);
+                return state;
+            }
+            else
+            {
+                var state = new AtomicState<U>
+                {
+                    ComponentId = componentId,
+                    UniqueIdentifier = name,
+                    Value = value
+                };
+                matchedComponent.Renderer = renderer;
+                matchedComponent.DependentStates.Add(state);
+                return state;
             }
         }
 
-        public void Bind(string[] field, Action onFieldUpdate)
+        public void RegisterChildComponents<U, W>(U parentComponent, Type childComponent, params AtomicState<W>[] dependentStates)
         {
-            if (FieldsUpdated.Intersect(field).Any())
-            {
-                onFieldUpdate();
-            }
+            var componentId = parentComponent.ToString().Split(",")[0];
+            var matchedComponent = Components.FirstOrDefault(x => x.ComponentId == componentId);
+            matchedComponent.ChildComponents.Add((childComponent.ToString(), dependentStates.Select(x=>x.UniqueIdentifier).ToList()));
+        }
+    }
+
+    public class AtomicState<U>
+    {
+        public string ComponentId { get; set; }
+        public string UniqueIdentifier { get; set; }
+        public U Value { get; set; }
+        
+
+        public override string ToString()
+        {
+            return $"{Value} | {UniqueIdentifier}";
+        }
+    }
+
+    public class Component
+    {
+        public string ComponentId { get; set; }
+        public ArrayList DependentStates { get; set; } = new ArrayList();
+        public List<(string, List<string>)> ChildComponents { get; set; } = new List<(string, List<string>)>();
+        public Action Renderer { get; set; }
+
+        public override string ToString()
+        {
+            return $"{ComponentId} | {DependentStates.Count} Dependent States";
         }
     }
 }

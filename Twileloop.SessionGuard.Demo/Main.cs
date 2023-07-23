@@ -1,93 +1,42 @@
-using Twileloop.SessionGuard.Models;
-using Twileloop.SessionGuard.Persistance;
 using Twileloop.SessionGuard.State;
 
 namespace Twileloop.SessionGuard.Demo
 {
     public partial class Main : Form
     {
-        private readonly IPersistance<MyData> persistance;
+        private readonly Session<AppState> session = Session<AppState>.Instance;
+        private readonly AtomicState<string> heading;
+        private readonly AtomicState<string> subHeading;
 
-        //Step 1: Initialize session
-        private readonly Session<MyData> session = Session<MyData>.Instance;
-
-        public Main(IPersistance<MyData> persistance)
+        public Main()
         {
             InitializeComponent();
 
-            //Step 2: Register a UI renderer event when state changes
-            session.OnStateUpdated += OnStateUpdated;
-            //Step 3: Load initial state
-            session.LoadState(new MyData
-            {
-                Id = 1,
-                FullName = "Sangeeth",
-                Counter = 0
-            });
+            heading = session.UseState(this, "heading", "Parent Default", Render);
+            subHeading = session.UseState(this, "subheading", "Parent Default", Render);
 
-            this.persistance = persistance;
+            session.RegisterChildComponents(this, typeof(Header), heading);
         }
 
-        //Step 4: Write the UI render event
-        private void OnStateUpdated(object sender, StateUpdateEventArgs<MyData> e)
+        private void Main_Load(object sender, EventArgs e)
         {
-            //Bind UI components for autoupdate
-            e.Session.Bind(nameof(e.State.Counter), () => Counter.Text = e.State.Counter.ToString());
-            e.Session.Bind(nameof(e.State.Counter), () => Tab.SelectedIndex = e.State.Counter);
-            e.Session.Bind(nameof(e.State.Counter), () => Prev.Enabled = e.State.Counter == 0 ? false : true);
-            e.Session.Bind(nameof(e.State.Counter), () => Next.Enabled = e.State.Counter == 0 ? false : true);
-
-            //When you want to update Text field whenever any of these state values change
-            e.Session.Bind(new string[] {
-                    nameof(e.State.Id),
-                    nameof(e.State.Counter),
-                    nameof(e.State.FullName)
-                },
-                () => Text.Text = $"Sangeeth scored {e.State.Counter} points"
-            );
+            Render();
         }
 
-        private void Write_Click(object sender, EventArgs e)
+        public void Render()
         {
-            persistance.WriteFileAsync(session.State, "sample.amr").Wait();
+            label1.Text = heading.Value;
+            label2.Text = subHeading.Value;
         }
 
-        private void Read_Click(object sender, EventArgs e)
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
-            //Read data from file
-            var amr = persistance.ReadFileAsync("sample.amr").Result;
-
-            //Load into state
-            session.LoadState(amr.Data);
-            var data = session.State;
-
-            Text.Text = $"Sangeeth scored {data.Counter} points";
+            session.SetState(this, heading, richTextBox1.Text);
         }
 
-        private void Plus_Click(object sender, EventArgs e)
+        private void richTextBox2_TextChanged(object sender, EventArgs e)
         {
-            session.SetState(x => x.Counter++);
-        }
-
-        private void Minus_Click(object sender, EventArgs e)
-        {
-            session.SetState(x => x.Counter--);
-        }
-
-        private void Next_Click(object sender, EventArgs e)
-        {
-            if (session.State.Counter < 4)
-            {
-                session.SetState(x => x.Counter++);
-            }
-        }
-
-        private void Prev_Click(object sender, EventArgs e)
-        {
-            if (session.State.Counter > 0)
-            {
-                session.SetState(x => x.Counter--);
-            }
+            session.SetState(this, subHeading, richTextBox2.Text);
         }
     }
 }

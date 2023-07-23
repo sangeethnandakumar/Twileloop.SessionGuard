@@ -22,7 +22,7 @@ namespace Twileloop.SessionGuard.Demo
         //Dependency Injections
         static void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IPersistance<MyData>, Persistance<MyData>>();
+            services.AddSingleton<IPersistance<AppState>, Persistance<AppState>>();
             services.AddSingleton<Main>();
         }
     }
