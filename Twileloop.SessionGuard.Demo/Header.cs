@@ -6,22 +6,25 @@ namespace Twileloop.SessionGuard.Demo
     {
         private readonly Session<AppState> session = Session<AppState>.Instance;
         private readonly AtomicState<string> heading;
+        private readonly AtomicState<string> subHeading;
 
         public Header()
         {
             InitializeComponent();
             heading = session.UseState(this, "heading", "Child Default", Render);
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
+            subHeading = session.UseState(this, "subheading", "Child Default", Render);
             Render();
         }
 
         public void Render()
         {
             Heading.Text = heading.Value;
-            Subheading.Text = DateTime.Now.ToShortTimeString();
+            Subheading.Text = subHeading.Value;
+        }
+
+        private void panel1_Paint_1(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

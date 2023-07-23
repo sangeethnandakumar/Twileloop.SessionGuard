@@ -33,6 +33,7 @@
             richTextBox2 = new RichTextBox();
             label1 = new Label();
             label2 = new Label();
+            header2 = new Header();
             SuspendLayout();
             // 
             // header1
@@ -45,7 +46,7 @@
             // 
             // richTextBox1
             // 
-            richTextBox1.Location = new Point(29, 279);
+            richTextBox1.Location = new Point(42, 476);
             richTextBox1.Name = "richTextBox1";
             richTextBox1.Size = new Size(339, 52);
             richTextBox1.TabIndex = 4;
@@ -54,7 +55,7 @@
             // 
             // richTextBox2
             // 
-            richTextBox2.Location = new Point(29, 337);
+            richTextBox2.Location = new Point(42, 534);
             richTextBox2.Name = "richTextBox2";
             richTextBox2.Size = new Size(339, 51);
             richTextBox2.TabIndex = 5;
@@ -65,7 +66,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-            label1.Location = new Point(30, 133);
+            label1.Location = new Point(43, 330);
             label1.Name = "label1";
             label1.Size = new Size(83, 32);
             label1.TabIndex = 6;
@@ -75,17 +76,25 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-            label2.Location = new Point(30, 189);
+            label2.Location = new Point(43, 386);
             label2.Name = "label2";
             label2.Size = new Size(83, 32);
             label2.TabIndex = 7;
             label2.Text = "label2";
             // 
+            // header2
+            // 
+            header2.Location = new Point(0, 94);
+            header2.Name = "header2";
+            header2.Size = new Size(695, 88);
+            header2.TabIndex = 8;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(695, 474);
+            ClientSize = new Size(695, 636);
+            Controls.Add(header2);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(richTextBox2);
@@ -103,5 +112,6 @@
         private RichTextBox richTextBox2;
         private Label label1;
         private Label label2;
+        private Header header2;
     }
 }

@@ -15,7 +15,7 @@ namespace Twileloop.SessionGuard.Demo
             heading = session.UseState(this, "heading", "Parent Default", Render);
             subHeading = session.UseState(this, "subheading", "Parent Default", Render);
 
-            session.RegisterChildComponents(this, typeof(Header), heading);
+            session.RegisterChildComponents(this, typeof(Header), heading, subHeading);
         }
 
         private void Main_Load(object sender, EventArgs e)

@@ -1,7 +1,4 @@
-﻿using ObjectsComparator.Comparator.Helpers;
-using System;
-using System.Linq;
-using System.Text.Json;
+﻿using System.Linq;
 
 namespace Twileloop.SessionGuard.State
 {
@@ -10,45 +7,37 @@ namespace Twileloop.SessionGuard.State
 
         public static void SetState<S, T>(this Session<S> session, object formState, AtomicState<T> atomicState, T newValue)
         {
-            foreach(var component in session.Components)
-            {
-                if(component.ComponentId == formState.ToString().Split(",")[0])
-                {
-                    foreach(var dependentState in component.DependentStates)
-                    {
-                        if (dependentState is AtomicState<T>)
-                        {
-                            var matchState = (AtomicState<T>)dependentState;
-                            if (
-                                matchState.UniqueIdentifier == atomicState.UniqueIdentifier &&
-                                matchState.ComponentId == formState.ToString().Split(",")[0]
-                                )
-                            {
-                                matchState.Value = newValue;
-                                component.Renderer();
+            var componentId = formState.ToString().Split(",")[0];
 
-                                //Find all dependent child components who also need to update
-                                foreach (var child in component.ChildComponents)
+            if (session.ComponentDictionary.TryGetValue(componentId, out var component))
+            {
+                var dependentStatesOfTypeT = component.DependentStates.OfType<AtomicState<T>>().ToList();
+
+                foreach (var dependentState in dependentStatesOfTypeT)
+                {
+                    if (dependentState.UniqueIdentifier == atomicState.UniqueIdentifier)
+                    {
+                        dependentState.Value = newValue;
+                        component.Renderer();
+
+                        foreach (var (childComponentId, childDependentStates) in component.ChildComponents)
+                        {
+                            if (session.ComponentDictionary.TryGetValue(childComponentId, out var childComponent))
+                            {
+                                var childDependentStatesOfTypeT = childComponent.DependentStates.OfType<AtomicState<T>>().ToList();
+
+                                foreach (var depState in childDependentStatesOfTypeT)
                                 {
-                                    var childComponent = session.Components.FirstOrDefault(x => x.ComponentId == child.Item1);
-                                    if(childComponent != null)
+                                    if (childDependentStates.Contains(depState.UniqueIdentifier))
                                     {
-                                        foreach (var depState in childComponent.DependentStates)
-                                        {
-                                            if (depState is AtomicState<T>)
-                                            {
-                                                var updatedState = (AtomicState<T>)depState;
-                                                updatedState.Value = newValue;
-                                                childComponent.Renderer();
-                                                return;
-                                            }
-                                        }
+                                        depState.Value = newValue;
+                                        childComponent.Renderer();
                                     }
                                 }
-
-                                return;
                             }
                         }
+
+                        return;
                     }
                 }
             }
