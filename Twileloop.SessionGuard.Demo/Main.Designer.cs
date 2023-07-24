@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            header1 = new Header();
+            header1 = new Header("Header1");
             richTextBox1 = new RichTextBox();
             richTextBox2 = new RichTextBox();
             label1 = new Label();
             label2 = new Label();
-            header2 = new Header();
+            header2 = new Header("Header2");
             SuspendLayout();
             // 
             // header1
@@ -41,12 +41,12 @@
             header1.Dock = DockStyle.Top;
             header1.Location = new Point(0, 0);
             header1.Name = "header1";
-            header1.Size = new Size(695, 88);
+            header1.Size = new Size(427, 88);
             header1.TabIndex = 3;
             // 
             // richTextBox1
             // 
-            richTextBox1.Location = new Point(42, 476);
+            richTextBox1.Location = new Point(42, 241);
             richTextBox1.Name = "richTextBox1";
             richTextBox1.Size = new Size(339, 52);
             richTextBox1.TabIndex = 4;
@@ -55,7 +55,7 @@
             // 
             // richTextBox2
             // 
-            richTextBox2.Location = new Point(42, 534);
+            richTextBox2.Location = new Point(42, 458);
             richTextBox2.Name = "richTextBox2";
             richTextBox2.Size = new Size(339, 51);
             richTextBox2.TabIndex = 5;
@@ -93,7 +93,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(695, 636);
+            ClientSize = new Size(427, 561);
             Controls.Add(header2);
             Controls.Add(label2);
             Controls.Add(label1);

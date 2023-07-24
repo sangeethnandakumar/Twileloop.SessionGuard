@@ -1,28 +1,35 @@
-﻿using Twileloop.SessionGuard.State;
+﻿using Twileloop.SessionGuard.Abstractions;
+using Twileloop.SessionGuard.State;
 
 namespace Twileloop.SessionGuard.Demo
 {
-    public partial class Header : UserControl
+    public partial class Header : StatefullUserControl
     {
-        private readonly Session<AppState> session = Session<AppState>.Instance;
-        private readonly AtomicState<string> heading;
-        private readonly AtomicState<string> subHeading;
+        private readonly State<string> heading;
+        private readonly State<string> subheading;
 
-        public Header()
+        public Header(string componentName) : base()
         {
             InitializeComponent();
-            heading = session.UseState(this, "heading", "Child Default", Render);
-            subHeading = session.UseState(this, "subheading", "Child Default", Render);
-            Render();
+            ComponentName = componentName;
+            heading = UseState("heading", "Heading");
+            subheading = UseState("subheading", "Sub-Heading");
         }
 
-        public void Render()
+        public override void Render()
         {
-            Heading.Text = heading.Value;
-            Subheading.Text = subHeading.Value;
+            base.Render();
+
+            Heading.Text = heading.Get<string>();
+            Subheading.Text = subheading.Get<string>();
         }
 
         private void panel1_Paint_1(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void Header_Load(object sender, EventArgs e)
         {
 
         }

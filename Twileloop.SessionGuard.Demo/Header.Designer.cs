@@ -36,13 +36,14 @@
             // 
             // panel1
             // 
-            panel1.BackColor = SystemColors.ActiveCaption;
+            panel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            panel1.BackColor = Color.Aquamarine;
             panel1.Controls.Add(Subheading);
             panel1.Controls.Add(Heading);
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(655, 88);
+            panel1.Size = new Size(648, 73);
             panel1.TabIndex = 0;
             panel1.Paint += panel1_Paint_1;
             // 
@@ -72,7 +73,8 @@
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(panel1);
             Name = "Header";
-            Size = new Size(655, 88);
+            Size = new Size(648, 73);
+            Load += Header_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ResumeLayout(false);

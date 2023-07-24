@@ -1,21 +1,27 @@
+using Twileloop.SessionGuard.Abstractions;
 using Twileloop.SessionGuard.State;
 
 namespace Twileloop.SessionGuard.Demo
 {
-    public partial class Main : Form
+    public partial class Main : StatefullForm
     {
-        private readonly Session<AppState> session = Session<AppState>.Instance;
-        private readonly AtomicState<string> heading;
-        private readonly AtomicState<string> subHeading;
+        private readonly State<string> heading;
+        private readonly State<string> subHeading;
 
-        public Main()
+        public Main() : base()
         {
             InitializeComponent();
 
-            heading = session.UseState(this, "heading", "Parent Default", Render);
-            subHeading = session.UseState(this, "subheading", "Parent Default", Render);
+            //Step 1: Register main component
+            ComponentName = "Main";
 
-            session.RegisterChildComponents(this, typeof(Header), heading, subHeading);
+            //Step 2: Register atomic states
+            heading = UseState("heading", "XML Processor");
+            subHeading = UseState("subheading", "Procesess XML in seconds");
+
+            //Step 3: Register child components
+            UseChild("Header1", heading, subHeading);
+            UseChild("Header2", heading, subHeading);
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -23,20 +29,21 @@ namespace Twileloop.SessionGuard.Demo
             Render();
         }
 
-        public void Render()
+        public override void Render()
         {
-            label1.Text = heading.Value;
-            label2.Text = subHeading.Value;
+            base.Render();
+            label1.Text = heading.Get<string>();
+            label2.Text = subHeading.Get<string>();
         }
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
-            session.SetState(this, heading, richTextBox1.Text);
+            heading.Set(richTextBox1.Text);
         }
 
         private void richTextBox2_TextChanged(object sender, EventArgs e)
         {
-            session.SetState(this, subHeading, richTextBox2.Text);
+            subHeading.Set(richTextBox2.Text);
         }
     }
 }
