@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Twileloop.SessionGuard.Models;
 
 namespace Twileloop.SessionGuard.State
 {
 
     public class Session<T>
     {
-        private static Session<T> instance;
         public T State { get; set; }
-        public List<string> FieldsUpdated { get; set; }
-        public event EventHandler<StateUpdateEventArgs<T>> OnStateUpdated;
+        private static Session<T> instance;
+        public List<Component> Components { get; set; } = new List<Component>();
+        public Dictionary<string, Component> ComponentDictionary { get; set; } = new Dictionary<string, Component>();
 
-        private Session() { }
+
+        private Session()
+        {
+        }
 
         public static Session<T> Instance
         {
@@ -26,27 +28,9 @@ namespace Twileloop.SessionGuard.State
             }
         }
 
-        public void LoadState(T newState, List<string> fieldsUpdated = null)
-        {
-            State = newState;
-            FieldsUpdated = fieldsUpdated is null ? new List<string>() : fieldsUpdated;
-            OnStateUpdated?.Invoke(this, new StateUpdateEventArgs<T>(State, FieldsUpdated, this));
-        }
+      
 
-        public void Bind(string field, Action onFieldUpdate)
-        {
-            if (FieldsUpdated.Contains(field))
-            {
-                onFieldUpdate();
-            }
-        }
 
-        public void Bind(string[] field, Action onFieldUpdate)
-        {
-            if (FieldsUpdated.Intersect(field).Any())
-            {
-                onFieldUpdate();
-            }
-        }
+  
     }
 }

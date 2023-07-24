@@ -28,200 +28,122 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Write = new Button();
-            Read = new Button();
-            Text = new RichTextBox();
-            Counter = new Label();
-            Minus = new Button();
-            Plus = new Button();
-            Tab = new TabControl();
-            tabPage1 = new TabPage();
-            tabPage2 = new TabPage();
-            tabPage3 = new TabPage();
-            tabPage4 = new TabPage();
-            tabPage5 = new TabPage();
-            Next = new Button();
-            Prev = new Button();
-            Tab.SuspendLayout();
+            panel1 = new Panel();
+            headerComponent1 = new HeaderComponent();
+            panel2 = new Panel();
+            splitContainer1 = new SplitContainer();
+            QueryWindow = new RichTextBox();
+            panel3 = new Panel();
+            footerComponent1 = new FooterComponent();
+            panel1.SuspendLayout();
+            panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
+            splitContainer1.Panel2.SuspendLayout();
+            splitContainer1.SuspendLayout();
+            panel3.SuspendLayout();
             SuspendLayout();
             // 
-            // Write
+            // panel1
             // 
-            Write.Location = new Point(31, 26);
-            Write.Name = "Write";
-            Write.Size = new Size(168, 37);
-            Write.TabIndex = 0;
-            Write.Text = "Write 'sample.amr'";
-            Write.UseVisualStyleBackColor = true;
-            Write.Click += Write_Click;
+            panel1.BackColor = SystemColors.ControlLight;
+            panel1.Controls.Add(headerComponent1);
+            panel1.Dock = DockStyle.Top;
+            panel1.Location = new Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(1038, 34);
+            panel1.TabIndex = 0;
             // 
-            // Read
+            // headerComponent1
             // 
-            Read.Location = new Point(31, 69);
-            Read.Name = "Read";
-            Read.Size = new Size(168, 37);
-            Read.TabIndex = 1;
-            Read.Text = "Read 'sample.amr'";
-            Read.UseVisualStyleBackColor = true;
-            Read.Click += Read_Click;
+            headerComponent1.BackColor = Color.White;
+            headerComponent1.ComponentName = "Header";
+            headerComponent1.Dock = DockStyle.Fill;
+            headerComponent1.Location = new Point(0, 0);
+            headerComponent1.Name = "headerComponent1";
+            headerComponent1.Size = new Size(1038, 34);
+            headerComponent1.TabIndex = 0;
             // 
-            // Text
+            // panel2
             // 
-            Text.Font = new Font("Tahoma", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            Text.Location = new Point(224, 20);
-            Text.Name = "Text";
-            Text.Size = new Size(331, 88);
-            Text.TabIndex = 2;
-            Text.Text = "";
+            panel2.BackColor = Color.White;
+            panel2.Controls.Add(splitContainer1);
+            panel2.Dock = DockStyle.Fill;
+            panel2.Location = new Point(0, 34);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(1038, 554);
+            panel2.TabIndex = 1;
             // 
-            // Counter
+            // splitContainer1
             // 
-            Counter.AutoSize = true;
-            Counter.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
-            Counter.Location = new Point(269, 141);
-            Counter.Name = "Counter";
-            Counter.Size = new Size(25, 30);
-            Counter.TabIndex = 3;
-            Counter.Text = "0";
+            splitContainer1.Dock = DockStyle.Fill;
+            splitContainer1.Location = new Point(0, 0);
+            splitContainer1.Name = "splitContainer1";
             // 
-            // Minus
+            // splitContainer1.Panel2
             // 
-            Minus.Location = new Point(205, 184);
-            Minus.Name = "Minus";
-            Minus.Size = new Size(71, 37);
-            Minus.TabIndex = 4;
-            Minus.Text = "-";
-            Minus.UseVisualStyleBackColor = true;
-            Minus.Click += Minus_Click;
+            splitContainer1.Panel2.Controls.Add(QueryWindow);
+            splitContainer1.Size = new Size(1038, 554);
+            splitContainer1.SplitterDistance = 346;
+            splitContainer1.TabIndex = 0;
             // 
-            // Plus
+            // QueryWindow
             // 
-            Plus.Location = new Point(282, 184);
-            Plus.Name = "Plus";
-            Plus.Size = new Size(71, 37);
-            Plus.TabIndex = 5;
-            Plus.Text = "+";
-            Plus.UseVisualStyleBackColor = true;
-            Plus.Click += Plus_Click;
+            QueryWindow.Dock = DockStyle.Fill;
+            QueryWindow.Font = new Font("Tahoma", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            QueryWindow.Location = new Point(0, 0);
+            QueryWindow.Name = "QueryWindow";
+            QueryWindow.Size = new Size(688, 554);
+            QueryWindow.TabIndex = 0;
+            QueryWindow.Text = "";
+            QueryWindow.TextChanged += QueryWindow_TextChanged;
             // 
-            // Tab
+            // panel3
             // 
-            Tab.Controls.Add(tabPage1);
-            Tab.Controls.Add(tabPage2);
-            Tab.Controls.Add(tabPage3);
-            Tab.Controls.Add(tabPage4);
-            Tab.Controls.Add(tabPage5);
-            Tab.Location = new Point(69, 258);
-            Tab.Name = "Tab";
-            Tab.SelectedIndex = 0;
-            Tab.Size = new Size(445, 168);
-            Tab.TabIndex = 6;
+            panel3.BackColor = Color.DarkBlue;
+            panel3.Controls.Add(footerComponent1);
+            panel3.Dock = DockStyle.Bottom;
+            panel3.Location = new Point(0, 548);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(1038, 40);
+            panel3.TabIndex = 2;
             // 
-            // tabPage1
+            // footerComponent1
             // 
-            tabPage1.Location = new Point(4, 24);
-            tabPage1.Name = "tabPage1";
-            tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(437, 140);
-            tabPage1.TabIndex = 0;
-            tabPage1.Text = "tabPage1";
-            tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // tabPage2
-            // 
-            tabPage2.Location = new Point(4, 24);
-            tabPage2.Name = "tabPage2";
-            tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(437, 140);
-            tabPage2.TabIndex = 1;
-            tabPage2.Text = "tabPage2";
-            tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // tabPage3
-            // 
-            tabPage3.Location = new Point(4, 24);
-            tabPage3.Name = "tabPage3";
-            tabPage3.Padding = new Padding(3);
-            tabPage3.Size = new Size(437, 140);
-            tabPage3.TabIndex = 2;
-            tabPage3.Text = "tabPage3";
-            tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // tabPage4
-            // 
-            tabPage4.Location = new Point(4, 24);
-            tabPage4.Name = "tabPage4";
-            tabPage4.Padding = new Padding(3);
-            tabPage4.Size = new Size(437, 140);
-            tabPage4.TabIndex = 3;
-            tabPage4.Text = "tabPage4";
-            tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // tabPage5
-            // 
-            tabPage5.Location = new Point(4, 24);
-            tabPage5.Name = "tabPage5";
-            tabPage5.Padding = new Padding(3);
-            tabPage5.Size = new Size(437, 140);
-            tabPage5.TabIndex = 4;
-            tabPage5.Text = "tabPage5";
-            tabPage5.UseVisualStyleBackColor = true;
-            // 
-            // Next
-            // 
-            Next.Location = new Point(400, 432);
-            Next.Name = "Next";
-            Next.Size = new Size(110, 37);
-            Next.TabIndex = 8;
-            Next.Text = "Next";
-            Next.UseVisualStyleBackColor = true;
-            Next.Click += Next_Click;
-            // 
-            // Prev
-            // 
-            Prev.Location = new Point(282, 432);
-            Prev.Name = "Prev";
-            Prev.Size = new Size(110, 37);
-            Prev.TabIndex = 7;
-            Prev.Text = "Previous";
-            Prev.UseVisualStyleBackColor = true;
-            Prev.Click += Prev_Click;
+            footerComponent1.BackColor = Color.FromArgb(0, 0, 192);
+            footerComponent1.ComponentName = "Footer";
+            footerComponent1.Dock = DockStyle.Bottom;
+            footerComponent1.Location = new Point(0, 8);
+            footerComponent1.Name = "footerComponent1";
+            footerComponent1.Size = new Size(1038, 32);
+            footerComponent1.TabIndex = 0;
             // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(585, 508);
-            Controls.Add(Next);
-            Controls.Add(Prev);
-            Controls.Add(Tab);
-            Controls.Add(Plus);
-            Controls.Add(Minus);
-            Controls.Add(Counter);
-            Controls.Add(Text);
-            Controls.Add(Read);
-            Controls.Add(Write);
+            ClientSize = new Size(1038, 588);
+            Controls.Add(panel3);
+            Controls.Add(panel2);
+            Controls.Add(panel1);
             Name = "Main";
-            Tab.ResumeLayout(false);
+            Load += Main_Load;
+            panel1.ResumeLayout(false);
+            panel2.ResumeLayout(false);
+            splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
+            splitContainer1.ResumeLayout(false);
+            panel3.ResumeLayout(false);
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
 
-        private Button Write;
-        private Button Read;
-        private RichTextBox Text;
-        private Label Counter;
-        private Button Minus;
-        private Button Plus;
-        private TabControl Tab;
-        private TabPage tabPage1;
-        private TabPage tabPage2;
-        private TabPage tabPage3;
-        private TabPage tabPage4;
-        private TabPage tabPage5;
-        private Button Next;
-        private Button Prev;
+        private Panel panel1;
+        private Panel panel2;
+        private Panel panel3;
+        private FooterComponent footerComponent1;
+        private SplitContainer splitContainer1;
+        private RichTextBox QueryWindow;
+        private HeaderComponent headerComponent1;
     }
 }
