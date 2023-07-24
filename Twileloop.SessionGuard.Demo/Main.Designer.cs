@@ -28,90 +28,122 @@
         /// </summary>
         private void InitializeComponent()
         {
-            header1 = new Header("Header1");
-            richTextBox1 = new RichTextBox();
-            richTextBox2 = new RichTextBox();
-            label1 = new Label();
-            label2 = new Label();
-            header2 = new Header("Header2");
+            panel1 = new Panel();
+            headerComponent1 = new HeaderComponent();
+            panel2 = new Panel();
+            splitContainer1 = new SplitContainer();
+            QueryWindow = new RichTextBox();
+            panel3 = new Panel();
+            footerComponent1 = new FooterComponent();
+            panel1.SuspendLayout();
+            panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
+            splitContainer1.Panel2.SuspendLayout();
+            splitContainer1.SuspendLayout();
+            panel3.SuspendLayout();
             SuspendLayout();
             // 
-            // header1
+            // panel1
             // 
-            header1.Dock = DockStyle.Top;
-            header1.Location = new Point(0, 0);
-            header1.Name = "header1";
-            header1.Size = new Size(427, 88);
-            header1.TabIndex = 3;
+            panel1.BackColor = SystemColors.ControlLight;
+            panel1.Controls.Add(headerComponent1);
+            panel1.Dock = DockStyle.Top;
+            panel1.Location = new Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(1038, 34);
+            panel1.TabIndex = 0;
             // 
-            // richTextBox1
+            // headerComponent1
             // 
-            richTextBox1.Location = new Point(42, 241);
-            richTextBox1.Name = "richTextBox1";
-            richTextBox1.Size = new Size(339, 52);
-            richTextBox1.TabIndex = 4;
-            richTextBox1.Text = "";
-            richTextBox1.TextChanged += richTextBox1_TextChanged;
+            headerComponent1.BackColor = Color.White;
+            headerComponent1.ComponentName = "Header";
+            headerComponent1.Dock = DockStyle.Fill;
+            headerComponent1.Location = new Point(0, 0);
+            headerComponent1.Name = "headerComponent1";
+            headerComponent1.Size = new Size(1038, 34);
+            headerComponent1.TabIndex = 0;
             // 
-            // richTextBox2
+            // panel2
             // 
-            richTextBox2.Location = new Point(42, 458);
-            richTextBox2.Name = "richTextBox2";
-            richTextBox2.Size = new Size(339, 51);
-            richTextBox2.TabIndex = 5;
-            richTextBox2.Text = "";
-            richTextBox2.TextChanged += richTextBox2_TextChanged;
+            panel2.BackColor = Color.White;
+            panel2.Controls.Add(splitContainer1);
+            panel2.Dock = DockStyle.Fill;
+            panel2.Location = new Point(0, 34);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(1038, 554);
+            panel2.TabIndex = 1;
             // 
-            // label1
+            // splitContainer1
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-            label1.Location = new Point(43, 330);
-            label1.Name = "label1";
-            label1.Size = new Size(83, 32);
-            label1.TabIndex = 6;
-            label1.Text = "label1";
+            splitContainer1.Dock = DockStyle.Fill;
+            splitContainer1.Location = new Point(0, 0);
+            splitContainer1.Name = "splitContainer1";
             // 
-            // label2
+            // splitContainer1.Panel2
             // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-            label2.Location = new Point(43, 386);
-            label2.Name = "label2";
-            label2.Size = new Size(83, 32);
-            label2.TabIndex = 7;
-            label2.Text = "label2";
+            splitContainer1.Panel2.Controls.Add(QueryWindow);
+            splitContainer1.Size = new Size(1038, 554);
+            splitContainer1.SplitterDistance = 346;
+            splitContainer1.TabIndex = 0;
             // 
-            // header2
+            // QueryWindow
             // 
-            header2.Location = new Point(0, 94);
-            header2.Name = "header2";
-            header2.Size = new Size(695, 88);
-            header2.TabIndex = 8;
+            QueryWindow.Dock = DockStyle.Fill;
+            QueryWindow.Font = new Font("Tahoma", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            QueryWindow.Location = new Point(0, 0);
+            QueryWindow.Name = "QueryWindow";
+            QueryWindow.Size = new Size(688, 554);
+            QueryWindow.TabIndex = 0;
+            QueryWindow.Text = "";
+            QueryWindow.TextChanged += QueryWindow_TextChanged;
+            // 
+            // panel3
+            // 
+            panel3.BackColor = Color.DarkBlue;
+            panel3.Controls.Add(footerComponent1);
+            panel3.Dock = DockStyle.Bottom;
+            panel3.Location = new Point(0, 548);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(1038, 40);
+            panel3.TabIndex = 2;
+            // 
+            // footerComponent1
+            // 
+            footerComponent1.BackColor = Color.FromArgb(0, 0, 192);
+            footerComponent1.ComponentName = "Footer";
+            footerComponent1.Dock = DockStyle.Bottom;
+            footerComponent1.Location = new Point(0, 8);
+            footerComponent1.Name = "footerComponent1";
+            footerComponent1.Size = new Size(1038, 32);
+            footerComponent1.TabIndex = 0;
             // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(427, 561);
-            Controls.Add(header2);
-            Controls.Add(label2);
-            Controls.Add(label1);
-            Controls.Add(richTextBox2);
-            Controls.Add(richTextBox1);
-            Controls.Add(header1);
+            ClientSize = new Size(1038, 588);
+            Controls.Add(panel3);
+            Controls.Add(panel2);
+            Controls.Add(panel1);
             Name = "Main";
             Load += Main_Load;
+            panel1.ResumeLayout(false);
+            panel2.ResumeLayout(false);
+            splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
+            splitContainer1.ResumeLayout(false);
+            panel3.ResumeLayout(false);
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
-        private Header header1;
-        private RichTextBox richTextBox1;
-        private RichTextBox richTextBox2;
-        private Label label1;
-        private Label label2;
-        private Header header2;
+
+        private Panel panel1;
+        private Panel panel2;
+        private Panel panel3;
+        private FooterComponent footerComponent1;
+        private SplitContainer splitContainer1;
+        private RichTextBox QueryWindow;
+        private HeaderComponent headerComponent1;
     }
 }

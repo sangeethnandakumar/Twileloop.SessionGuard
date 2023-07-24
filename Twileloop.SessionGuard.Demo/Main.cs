@@ -1,3 +1,4 @@
+using System.Windows.Forms;
 using Twileloop.SessionGuard.Abstractions;
 using Twileloop.SessionGuard.State;
 
@@ -5,8 +6,7 @@ namespace Twileloop.SessionGuard.Demo
 {
     public partial class Main : StatefullForm
     {
-        private readonly State<string> heading;
-        private readonly State<string> subHeading;
+        private readonly State<string> query;
 
         public Main() : base()
         {
@@ -14,14 +14,10 @@ namespace Twileloop.SessionGuard.Demo
 
             //Step 1: Register main component
             ComponentName = "Main";
-
             //Step 2: Register atomic states
-            heading = UseState("heading", "XML Processor");
-            subHeading = UseState("subheading", "Procesess XML in seconds");
-
+            query = UseState("query", "SELECT * FROM");
             //Step 3: Register child components
-            UseChild("Header1", heading, subHeading);
-            UseChild("Header2", heading, subHeading);
+            UseChild("Footer", query);
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -32,18 +28,15 @@ namespace Twileloop.SessionGuard.Demo
         public override void Render()
         {
             base.Render();
-            label1.Text = heading.Get<string>();
-            label2.Text = subHeading.Get<string>();
+            QueryWindow.Text = query.Get<string>();
+            QueryWindow.SelectionStart = QueryWindow.Text.Length;
+            QueryWindow.SelectionLength = 0;
+            QueryWindow.ScrollToCaret();
         }
 
-        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        private void QueryWindow_TextChanged(object sender, EventArgs e)
         {
-            heading.Set(richTextBox1.Text);
-        }
-
-        private void richTextBox2_TextChanged(object sender, EventArgs e)
-        {
-            subHeading.Set(richTextBox2.Text);
+            query.Set(QueryWindow.Text);
         }
     }
 }

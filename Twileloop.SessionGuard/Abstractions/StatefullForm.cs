@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using Twileloop.SessionGuard.State;
@@ -8,7 +10,7 @@ namespace Twileloop.SessionGuard.Abstractions
     public partial class StatefullUserControl : UserControl
     {
         public readonly Session<AppState> Session = Session<AppState>.Instance;
-        public string ComponentName { get; init; }
+        public string ComponentName { get; set; }
 
         public StatefullUserControl()
         {
@@ -87,7 +89,7 @@ namespace Twileloop.SessionGuard.Abstractions
 
         public virtual void Render()
         {
-
+            Debug.WriteLine($"{DateTime.Now.TimeOfDay} - {ComponentName} Rendering...");
         }
     }
 
@@ -98,7 +100,7 @@ namespace Twileloop.SessionGuard.Abstractions
 
         public StatefullForm()
         {
-            if(Session.State is null)
+            if (Session.State is null)
             {
                 Session.State = new AppState();
             }
@@ -108,11 +110,11 @@ namespace Twileloop.SessionGuard.Abstractions
         {
             //Get the component
             var calleeComponent = Session.State.Components.FirstOrDefault(component => component.Name == ComponentName);
-            if(calleeComponent is not null)
+            if (calleeComponent is not null)
             {
                 //Get the state
                 var calleeState = calleeComponent.States.OfType<State<U>>().FirstOrDefault(state => state.Name == name);
-                if(calleeState is not null)
+                if (calleeState is not null)
                 {
                     calleeState.Value = value;
                     return calleeState;
@@ -173,7 +175,7 @@ namespace Twileloop.SessionGuard.Abstractions
 
         public virtual void Render()
         {
-
+            Debug.WriteLine($"{DateTime.Now.TimeOfDay} - {ComponentName} Rendering...");
         }
     }
 }
