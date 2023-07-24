@@ -30,7 +30,7 @@ namespace Twileloop.SessionGuard.Abstractions
                 var calleeState = calleeComponent.States.OfType<State<U>>().FirstOrDefault(state => state.Name == name);
                 if (calleeState is not null)
                 {
-                    calleeState.Value = value;
+                    calleeState.InternalValue = value;
                     return calleeState;
                 }
                 else
@@ -39,7 +39,7 @@ namespace Twileloop.SessionGuard.Abstractions
                     {
                         Component = calleeComponent,
                         Name = name,
-                        Value = value
+                        InternalValue = value
                     };
                     calleeComponent.States.Add(newState);
                     return newState;
@@ -57,7 +57,7 @@ namespace Twileloop.SessionGuard.Abstractions
                 {
                     Component = newComponent,
                     Name = name,
-                    Value = value
+                    InternalValue = value
                 };
                 newComponent.States.Add(newState);
                 Session.State.Components.Add(newComponent);
@@ -116,7 +116,7 @@ namespace Twileloop.SessionGuard.Abstractions
                 var calleeState = calleeComponent.States.OfType<State<U>>().FirstOrDefault(state => state.Name == name);
                 if (calleeState is not null)
                 {
-                    calleeState.Value = value;
+                    calleeState.InternalValue = value;
                     return calleeState;
                 }
                 else
@@ -125,7 +125,7 @@ namespace Twileloop.SessionGuard.Abstractions
                     {
                         Component = calleeComponent,
                         Name = name,
-                        Value = value
+                        InternalValue = value
                     };
                     calleeComponent.States.Add(newState);
                     return newState;
@@ -143,7 +143,7 @@ namespace Twileloop.SessionGuard.Abstractions
                 {
                     Component = newComponent,
                     Name = name,
-                    Value = value
+                    InternalValue = value
                 };
                 newComponent.States.Add(newState);
                 Session.State.Components.Add(newComponent);
