@@ -4,6 +4,7 @@
 		<LangVersion>preview</LangVersion>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<UseWindowsForms>true</UseWindowsForms>
+		<EnableWindowsTargeting>true</EnableWindowsTargeting>
 		<Title>Twileloop.SessionGuard</Title>
 		<Authors>Twileloop, Sangeeth Nandakumar</Authors>
 		<Company>Twileloop</Company>
