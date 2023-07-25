@@ -18,7 +18,7 @@ namespace Twileloop.SessionGuard.Demo
         public override void Render()
         {
             base.Render();
-            var text = query.Get<string>();
+            var text = query.Value;
             label1.Text = $"{text.Length} Characters | {text.Split(" ").Length} Words | {text.Split("\n").Length} Lines";
         }
 

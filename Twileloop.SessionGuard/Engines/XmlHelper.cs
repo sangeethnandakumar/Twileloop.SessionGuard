@@ -2,7 +2,7 @@
 using YAXLib.Enums;
 using YAXLib.Options;
 
-namespace Twileloop.SessionGuard.Helper
+namespace Twileloop.SessionGuard.Engines
 {
     public static class XmlHelper
     {
@@ -11,7 +11,7 @@ namespace Twileloop.SessionGuard.Helper
             var serializer = new YAXSerializer(typeof(T), new SerializerOptions
             {
                 ExceptionHandlingPolicies = YAXExceptionHandlingPolicies.DoNotThrow,
-                ExceptionBehavior =  YAXExceptionTypes.Ignore
+                ExceptionBehavior = YAXExceptionTypes.Ignore
             });
             return serializer.Serialize(obj);
         }

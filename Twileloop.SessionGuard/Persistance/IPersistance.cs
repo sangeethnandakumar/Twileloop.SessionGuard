@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Twileloop.SessionGuard.Models;
+using Twileloop.SessionGuard.Persistance.Internal;
 
 namespace Twileloop.SessionGuard.Persistance
 {

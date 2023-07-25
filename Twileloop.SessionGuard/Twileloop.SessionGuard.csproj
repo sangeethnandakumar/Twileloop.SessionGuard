@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<LangVersion>preview</LangVersion>
-		<TargetFramework>net8.0-windows</TargetFramework>
+		<TargetFramework>net6.0-windows</TargetFramework>
 		<UseWindowsForms>true</UseWindowsForms>
 		<Title>Twileloop.SessionGuard</Title>
 		<Authors>Twileloop, Sangeeth Nandakumar</Authors>

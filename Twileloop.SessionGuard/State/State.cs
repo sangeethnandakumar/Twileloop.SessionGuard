@@ -1,6 +1,5 @@
-﻿using System.ComponentModel;
-using System.Linq;
-using System.Xml.Linq;
+﻿using System.Linq;
+using Twileloop.SessionGuard.State.Internal;
 
 namespace Twileloop.SessionGuard.State
 {
@@ -8,28 +7,29 @@ namespace Twileloop.SessionGuard.State
     {
         public Component Component { get; set; }
         public string Name { get; set; }
-        internal U Value { get; set; }
+        public U Value { get { return Get<U>(); } set { Set(value); } }
+        internal U InternalValue { get; set; }
 
         public override string ToString()
         {
-            return $"{Name} = '{Value}'";
+            return $"{Name} = '{InternalValue}'";
         }
 
-        public U Get<U>()
+        private U Get<U>()
         {
             var activeState = Component.States.OfType<State<U>>().FirstOrDefault(x => x.Name == Name);
-            if(activeState is not null)
+            if (activeState is not null)
             {
-                return activeState.Value;
+                return activeState.InternalValue;
             }
             return default(U);
         }
 
-        public void Set(U value)
+        private void Set(U value)
         {
-            if (Value.ToString() != value.ToString())
+            if (InternalValue.ToString() != value.ToString())
             {
-                Value = value;
+                InternalValue = value;
                 var doesComponentHasDependency = Component.States.OfType<State<U>>().Where(x => x.Name == Name).Any();
                 if (doesComponentHasDependency)
                 {
@@ -39,7 +39,7 @@ namespace Twileloop.SessionGuard.State
             }
         }
 
-        public void RenderRecursively(Component component, string name)
+        private void RenderRecursively(Component component, string name)
         {
             foreach (var child in component.Children)
             {

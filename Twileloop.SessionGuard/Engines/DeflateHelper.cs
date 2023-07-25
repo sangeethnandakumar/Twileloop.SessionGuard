@@ -1,7 +1,7 @@
 ﻿using System.IO.Compression;
 using System.IO;
 
-namespace Twileloop.SessionGuard.Helper
+namespace Twileloop.SessionGuard.Engines
 {
     public static class DeflateHelper
     {
