@@ -6,13 +6,12 @@ using Twileloop.SessionGuard.State.Internal;
 
 namespace Twileloop.SessionGuard.Abstractions
 {
-
-    public partial class StatefullForm : Form
+    public partial class StatefullUserControl : UserControl
     {
         public readonly Session<AppState> Session = Session<AppState>.Instance;
-        public string ComponentName { get; init; }
+        public string ComponentName { get; set; }
 
-        public StatefullForm()
+        public StatefullUserControl()
         {
             if (Session.State is null)
             {
@@ -63,11 +62,6 @@ namespace Twileloop.SessionGuard.Abstractions
                 Session.State.Components.Add(newComponent);
                 return newState;
             }
-        }
-
-        public void RenderDefaultState()
-        {
-
         }
 
         public void UseChild<W>(string childName, params State<W>[] dependentStates)

@@ -3,9 +3,9 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using System.Threading.Tasks;
+using Twileloop.SessionGuard.Engines;
 using Twileloop.SessionGuard.Exceptions;
-using Twileloop.SessionGuard.Helper;
-using Twileloop.SessionGuard.Models;
+using Twileloop.SessionGuard.Persistance.Internal;
 
 namespace Twileloop.SessionGuard.Persistance
 {

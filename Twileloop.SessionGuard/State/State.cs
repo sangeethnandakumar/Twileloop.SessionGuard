@@ -1,6 +1,5 @@
-﻿using System.ComponentModel;
-using System.Linq;
-using System.Xml.Linq;
+﻿using System.Linq;
+using Twileloop.SessionGuard.State.Internal;
 
 namespace Twileloop.SessionGuard.State
 {
@@ -19,7 +18,7 @@ namespace Twileloop.SessionGuard.State
         private U Get<U>()
         {
             var activeState = Component.States.OfType<State<U>>().FirstOrDefault(x => x.Name == Name);
-            if(activeState is not null)
+            if (activeState is not null)
             {
                 return activeState.InternalValue;
             }

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Twileloop.SessionGuard.State
+namespace Twileloop.SessionGuard.State.Internal
 {
     public class Component
     {

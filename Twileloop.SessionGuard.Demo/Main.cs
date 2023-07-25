@@ -1,4 +1,3 @@
-using System.Windows.Forms;
 using Twileloop.SessionGuard.Abstractions;
 using Twileloop.SessionGuard.State;
 
@@ -18,6 +17,8 @@ namespace Twileloop.SessionGuard.Demo
             query = UseState("query", "SELECT * FROM");
             //Step 3: Register child components
             UseChild("Footer", query);
+            //Step 4: Render default state
+            RenderDefaultState();
         }
 
         private void Main_Load(object sender, EventArgs e)

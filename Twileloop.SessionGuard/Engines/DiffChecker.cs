@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Twileloop.SessionGuard.State
+namespace Twileloop.SessionGuard.Engines
 {
     public static class DiffChecker<T>
     {

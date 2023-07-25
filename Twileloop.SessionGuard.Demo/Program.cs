@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Twileloop.SessionGuard.Persistance;
-using Twileloop.SessionGuard.State;
+using Twileloop.SessionGuard.State.Internal;
 
 namespace Twileloop.SessionGuard.Demo
 {
