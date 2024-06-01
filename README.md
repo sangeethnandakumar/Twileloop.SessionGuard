@@ -17,7 +17,5 @@ SessionGuard has 2 primary features
 - State Management
 - Persistence Management
 
-![example](https://github.com/sangeethnandakumar/Twileloop.SessionGuard/assets/24974154/553ef507-5565-4c3d-977d-a2191b918f30)
-
 ## How To Use?
 Full Documentation: https://sangeethnandakumar.github.io/Twileloop.SessionGuard/
